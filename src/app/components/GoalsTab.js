@@ -9,6 +9,53 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
   const [goalDate, setGoalDate] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('⭐');
 
+  // Function to convert Font Awesome class to emoji
+  const faToEmoji = (faIcon) => {
+    const iconMap = {
+      'fa-star': '⭐',
+      'fa-heart': '❤️',
+      'fa-gift': '🎁',
+      'fa-laptop': '💻',
+      'fa-piggy-bank': '🐷',
+      'fa-plane': '✈️',
+      'fa-car': '🚗',
+      'fa-house': '🏠',
+      'fa-graduation-cap': '🎓',
+      'fa-utensils': '🍽️',
+      'fa-pen': '✏️',
+      'fa-computer': '💻',
+      'fa-gamepad': '🎮',
+      'fa-dumbbell': '💪',
+      'fa-camera': '📷',
+      'fa-headphones': '🎧',
+      'fa-coins': '💰',
+      'fa-crown': '👑',
+      'fa-mobile-alt': '📱',
+      'fa-tv': '📺',
+      'fa-motorcycle': '🏍️',
+      'fa-bicycle': '🚲',
+      'fa-couch': '🛋️',
+      'fa-bed': '🛏️',
+      'fa-mug-hot': '☕',
+      'fa-pizza-slice': '🍕',
+      'fa-burger': '🍔',
+      'fa-umbrella-beach': '🏖️',
+      'fa-campground': '⛺',
+      'fa-chart-line': '📈',
+      'fa-book': '📚',
+      'fa-ring': '💍',
+      'fa-heart-pulse': '🏥',
+      'fa-spa': '🧘',
+      'fa-film': '🎬',
+      'fa-music': '🎵',
+      'fa-clock': '⌚',
+      'fa-gem': '💎',
+      'fa-shirt': '👕',
+      'fa-flask': '⚗️'
+    };
+    return iconMap[faIcon] || '⭐';
+  };
+
   // Function to get appropriate emoji based on goal name
   const getEmojiForGoal = (goalName) => {
     const name = goalName.toLowerCase();
@@ -72,8 +119,6 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       return '🎓';
     if (name.includes('book') || name.includes('library') || name.includes('study')) 
       return '📚';
-    if (name.includes('course') || name.includes('class') || name.includes('training')) 
-      return '📹';
     
     // Gifts & Celebrations
     if (name.includes('gift') || name.includes('present') || name.includes('christmas') || name.includes('birthday')) 
@@ -116,7 +161,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     return '⭐';
   };
 
-  // Icon options for modal selection
+  // Icon options for modal selection - with emojis
   const iconOptions = [
     { name: 'Star', emoji: '⭐' },
     { name: 'Heart', emoji: '❤️' },
@@ -129,13 +174,29 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     { name: 'Graduation', emoji: '🎓' },
     { name: 'Food', emoji: '🍽️' },
     { name: 'Pen', emoji: '✏️' },
-    { name: 'Computer', emoji: '💻' },
     { name: 'Game', emoji: '🎮' },
     { name: 'Gym', emoji: '💪' },
     { name: 'Camera', emoji: '📷' },
     { name: 'Headphones', emoji: '🎧' },
     { name: 'Money', emoji: '💰' },
-    { name: 'Crown', emoji: '👑' }
+    { name: 'Crown', emoji: '👑' },
+    { name: 'Phone', emoji: '📱' },
+    { name: 'TV', emoji: '📺' },
+    { name: 'Coffee', emoji: '☕' },
+    { name: 'Pizza', emoji: '🍕' },
+    { name: 'Burger', emoji: '🍔' },
+    { name: 'Beach', emoji: '🏖️' },
+    { name: 'Tent', emoji: '⛺' },
+    { name: 'Chart', emoji: '📈' },
+    { name: 'Book', emoji: '📚' },
+    { name: 'Ring', emoji: '💍' },
+    { name: 'Hospital', emoji: '🏥' },
+    { name: 'Yoga', emoji: '🧘' },
+    { name: 'Movie', emoji: '🎬' },
+    { name: 'Music', emoji: '🎵' },
+    { name: 'Watch', emoji: '⌚' },
+    { name: 'Gem', emoji: '💎' },
+    { name: 'Shirt', emoji: '👕' }
   ];
 
   // Safe percentage calculation - FIXES NaN%
@@ -158,7 +219,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       target: targetValue,
       date: goalDate,
       saved: 0,
-      icon: selectedIcon
+      icon: selectedIcon // Store as emoji, not Font Awesome class
     };
     
     if (addGoal) {
@@ -193,10 +254,20 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
             padding: '12px 24px',
             fontSize: '1rem',
             borderRadius: '12px',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#10B981',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
           }}
+          onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
+          onMouseLeave={(e) => e.currentTarget.style.background = '#10B981'}
         >
-          <span style={{ marginRight: '8px' }}>➕</span>
+          <span style={{ fontSize: '1.2rem' }}>➕</span>
           New Goal
         </button>
       </div>
@@ -209,7 +280,25 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
         padding: '5px'
       }}>
         {goals && goals.length > 0 ? goals.map(g => {
-          const goalEmoji = g.icon || getEmojiForGoal(g.name);
+          // Determine which emoji to show:
+          // 1. If it's already an emoji (starts with non-letter), use it
+          // 2. If it's a Font Awesome class (starts with 'fa-'), convert it
+          // 3. Otherwise, generate based on name
+          let displayEmoji = '⭐';
+          
+          if (g.icon) {
+            if (g.icon.startsWith('fa-')) {
+              displayEmoji = faToEmoji(g.icon);
+            } else if (g.icon.length <= 2) {
+              // Likely already an emoji
+              displayEmoji = g.icon;
+            } else {
+              displayEmoji = getEmojiForGoal(g.name);
+            }
+          } else {
+            displayEmoji = getEmojiForGoal(g.name);
+          }
+          
           const percentage = calculatePercentage(g.saved, g.target);
           
           return (
@@ -227,7 +316,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 gap: '15px',
                 marginBottom: '15px'
               }}>
-                {/* Emoji Box - always shows emojis, never blanks */}
+                {/* Emoji Box - now shows proper emojis */}
                 <div style={{
                   width: '50px',
                   height: '50px',
@@ -240,7 +329,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   fontSize: '1.8rem',
                   flexShrink: 0
                 }}>
-                  {goalEmoji}
+                  {displayEmoji}
                 </div>
 
                 {/* Details */}
@@ -304,7 +393,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </button>
               </div>
 
-              {/* Progress Bar - Now safe from NaN */}
+              {/* Progress Bar */}
               <div>
                 <div style={{ 
                   display: 'flex', 
@@ -364,10 +453,13 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
               onClick={() => setShowModal(true)}
               style={{
                 padding: '10px 24px',
-                fontSize: '0.95rem'
+                fontSize: '0.95rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              <span style={{ marginRight: '8px' }}>➕</span>
+              <span style={{ fontSize: '1.1rem' }}>➕</span>
               Create Your First Goal
             </button>
           </div>
@@ -439,7 +531,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 />
               </div>
 
-              {/* Emoji Selection - using emojis instead of Font Awesome */}
+              {/* Emoji Selection */}
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ 
                   display: 'block', 
@@ -455,9 +547,9 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   gridTemplateColumns: 'repeat(auto-fill, minmax(50px, 1fr))',
                   gap: '8px'
                 }}>
-                  {iconOptions.map((icon) => (
+                  {iconOptions.map((icon, index) => (
                     <button
-                      key={icon.emoji}
+                      key={`${icon.emoji}-${index}`}
                       type="button"
                       onClick={() => setSelectedIcon(icon.emoji)}
                       style={{
@@ -561,11 +653,16 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     fontSize: '0.95rem',
                     fontWeight: '600',
                     cursor: 'pointer',
-                    transition: 'background 0.2s'
+                    transition: 'background 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#10B981'}
                 >
+                  <span>✨</span>
                   Create Goal
                 </button>
                 <button
