@@ -7,146 +7,142 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
   const [goalName, setGoalName] = useState('');
   const [goalTarget, setGoalTarget] = useState('');
   const [goalDate, setGoalDate] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState('fa-star');
+  const [selectedIcon, setSelectedIcon] = useState('⭐');
 
-  // Function to get appropriate icon based on goal name
-  const getIconForGoal = (goalName) => {
+  // Function to get appropriate emoji based on goal name
+  const getEmojiForGoal = (goalName) => {
     const name = goalName.toLowerCase();
     
     // Technology & Electronics
     if (name.includes('monitor') || name.includes('laptop') || name.includes('computer') || name.includes('pc') || name.includes('macbook')) 
-      return 'fa-laptop';
+      return '💻';
     if (name.includes('phone') || name.includes('iphone') || name.includes('samsung') || name.includes('tablet')) 
-      return 'fa-mobile-alt';
+      return '📱';
     if (name.includes('camera') || name.includes('gopro')) 
-      return 'fa-camera';
+      return '📷';
     if (name.includes('headphone') || name.includes('earbuds') || name.includes('airpods')) 
-      return 'fa-headphones';
+      return '🎧';
     if (name.includes('tv') || name.includes('television') || name.includes('smart tv')) 
-      return 'fa-tv';
+      return '📺';
     
     // Transportation
     if (name.includes('car') || name.includes('vehicle') || name.includes('toyota') || name.includes('honda')) 
-      return 'fa-car';
+      return '🚗';
     if (name.includes('motor') || name.includes('bike') || name.includes('motorcycle')) 
-      return 'fa-motorcycle';
+      return '🏍️';
     if (name.includes('bicycle') || name.includes('ebike')) 
-      return 'fa-bicycle';
+      return '🚲';
     
     // Home & Living
     if (name.includes('house') || name.includes('home') || name.includes('apartment') || name.includes('condo')) 
-      return 'fa-house';
+      return '🏠';
     if (name.includes('furniture') || name.includes('sofa') || name.includes('table') || name.includes('chair')) 
-      return 'fa-couch';
+      return '🛋️';
     if (name.includes('bed') || name.includes('mattress')) 
-      return 'fa-bed';
+      return '🛏️';
     
     // Food & Dining
     if (name.includes('dinner') || name.includes('food') || name.includes('restaurant') || name.includes('groceries')) 
-      return 'fa-utensils';
+      return '🍽️';
     if (name.includes('coffee') || name.includes('starbucks')) 
-      return 'fa-mug-hot';
+      return '☕';
     if (name.includes('pizza')) 
-      return 'fa-pizza-slice';
+      return '🍕';
     if (name.includes('burger')) 
-      return 'fa-burger';
+      return '🍔';
     
     // Travel & Vacation
     if (name.includes('plane') || name.includes('flight') || name.includes('vacation') || name.includes('trip') || name.includes('travel')) 
-      return 'fa-plane';
+      return '✈️';
     if (name.includes('hotel') || name.includes('resort') || name.includes('beach')) 
-      return 'fa-umbrella-beach';
+      return '🏖️';
     if (name.includes('camping') || name.includes('tent')) 
-      return 'fa-campground';
+      return '⛺';
     
     // Finance & Savings
     if (name.includes('piggy') || name.includes('save') || name.includes('bank') || name.includes('emergency fund')) 
-      return 'fa-piggy-bank';
+      return '🐷';
     if (name.includes('coin') || name.includes('money') || name.includes('cash')) 
-      return 'fa-coins';
+      return '💰';
     if (name.includes('investment') || name.includes('stock') || name.includes('crypto')) 
-      return 'fa-chart-line';
+      return '📈';
     
     // Education
     if (name.includes('grad') || name.includes('school') || name.includes('education') || name.includes('college') || name.includes('university')) 
-      return 'fa-graduation-cap';
+      return '🎓';
     if (name.includes('book') || name.includes('library') || name.includes('study')) 
-      return 'fa-book';
+      return '📚';
     if (name.includes('course') || name.includes('class') || name.includes('training')) 
-      return 'fa-video';
+      return '📹';
     
     // Gifts & Celebrations
     if (name.includes('gift') || name.includes('present') || name.includes('christmas') || name.includes('birthday')) 
-      return 'fa-gift';
+      return '🎁';
     if (name.includes('wedding') || name.includes('anniversary')) 
-      return 'fa-ring';
+      return '💍';
     
     // Health & Fitness
     if (name.includes('gym') || name.includes('fitness') || name.includes('workout') || name.includes('exercise')) 
-      return 'fa-dumbbell';
+      return '💪';
     if (name.includes('health') || name.includes('medical') || name.includes('doctor') || name.includes('hospital')) 
-      return 'fa-heart-pulse';
+      return '🏥';
     if (name.includes('yoga') || name.includes('meditation')) 
-      return 'fa-spa';
+      return '🧘';
     
     // Entertainment
     if (name.includes('game') || name.includes('playstation') || name.includes('xbox') || name.includes('nintendo')) 
-      return 'fa-gamepad';
+      return '🎮';
     if (name.includes('movie') || name.includes('film') || name.includes('cinema') || name.includes('netflix')) 
-      return 'fa-film';
+      return '🎬';
     if (name.includes('music') || name.includes('concert') || name.includes('festival')) 
-      return 'fa-music';
+      return '🎵';
     
     // Personal & Lifestyle
     if (name.includes('watch') || name.includes('rolex') || name.includes('apple watch')) 
-      return 'fa-clock';
+      return '⌚';
     if (name.includes('jewelry') || name.includes('necklace') || name.includes('ring')) 
-      return 'fa-gem';
+      return '💎';
     if (name.includes('clothes') || name.includes('shirt') || name.includes('dress') || name.includes('shoes')) 
-      return 'fa-shirt';
+      return '👕';
     
-    // Default icons based on common words
+    // Default
     if (name.includes('test') || name.includes('trial')) 
-      return 'fa-flask';
+      return '⚗️';
     if (name.includes('new')) 
-      return 'fa-star';
+      return '⭐';
     if (name.includes('big') || name.includes('large')) 
-      return 'fa-crown';
+      return '👑';
     
-    // Default fallback
-    return 'fa-star';
+    return '⭐';
   };
 
   // Icon options for modal selection
   const iconOptions = [
-    { name: 'Star', icon: 'fa-star' },
-    { name: 'Heart', icon: 'fa-heart' },
-    { name: 'Gift', icon: 'fa-gift' },
-    { name: 'Laptop', icon: 'fa-laptop' },
-    { name: 'Piggy Bank', icon: 'fa-piggy-bank' },
-    { name: 'Plane', icon: 'fa-plane' },
-    { name: 'Car', icon: 'fa-car' },
-    { name: 'House', icon: 'fa-house' },
-    { name: 'Graduation', icon: 'fa-graduation-cap' },
-    { name: 'Utensils', icon: 'fa-utensils' },
-    { name: 'Pen', icon: 'fa-pen' },
-    { name: 'Computer', icon: 'fa-computer' },
-    { name: 'Game', icon: 'fa-gamepad' },
-    { name: 'Gym', icon: 'fa-dumbbell' },
-    { name: 'Camera', icon: 'fa-camera' },
-    { name: 'Headphones', icon: 'fa-headphones' }
+    { name: 'Star', emoji: '⭐' },
+    { name: 'Heart', emoji: '❤️' },
+    { name: 'Gift', emoji: '🎁' },
+    { name: 'Laptop', emoji: '💻' },
+    { name: 'Piggy Bank', emoji: '🐷' },
+    { name: 'Plane', emoji: '✈️' },
+    { name: 'Car', emoji: '🚗' },
+    { name: 'House', emoji: '🏠' },
+    { name: 'Graduation', emoji: '🎓' },
+    { name: 'Food', emoji: '🍽️' },
+    { name: 'Pen', emoji: '✏️' },
+    { name: 'Computer', emoji: '💻' },
+    { name: 'Game', emoji: '🎮' },
+    { name: 'Gym', emoji: '💪' },
+    { name: 'Camera', emoji: '📷' },
+    { name: 'Headphones', emoji: '🎧' },
+    { name: 'Money', emoji: '💰' },
+    { name: 'Crown', emoji: '👑' }
   ];
 
   // Safe percentage calculation - FIXES NaN%
   const calculatePercentage = (saved, target) => {
-    // Convert to numbers and handle invalid cases
     const savedNum = Number(saved) || 0;
     const targetNum = Number(target) || 0;
-    
-    // Avoid division by zero
     if (targetNum <= 0) return 0;
-    
-    // Calculate percentage and cap at 100%
     const percentage = (savedNum / targetNum) * 100;
     return Math.min(percentage, 100);
   };
@@ -154,7 +150,6 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
   const addGoalHandler = (e) => {
     e.preventDefault();
     
-    // Ensure target is a valid number
     const targetValue = parseFloat(goalTarget) || 0;
     
     const newGoal = {
@@ -176,7 +171,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     setGoalName('');
     setGoalTarget('');
     setGoalDate('');
-    setSelectedIcon('fa-star');
+    setSelectedIcon('⭐');
   };
 
   return (
@@ -201,7 +196,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
             whiteSpace: 'nowrap'
           }}
         >
-          <i className="fa-solid fa-plus" style={{ marginRight: '8px' }}></i>
+          <span style={{ marginRight: '8px' }}>➕</span>
           New Goal
         </button>
       </div>
@@ -214,8 +209,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
         padding: '5px'
       }}>
         {goals && goals.length > 0 ? goals.map(g => {
-          // Get appropriate icon based on goal name, fallback to saved icon or star
-          const goalIcon = g.icon || getIconForGoal(g.name);
+          const goalEmoji = g.icon || getEmojiForGoal(g.name);
           const percentage = calculatePercentage(g.saved, g.target);
           
           return (
@@ -233,7 +227,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 gap: '15px',
                 marginBottom: '15px'
               }}>
-                {/* Icon Box - now shows proper icons */}
+                {/* Emoji Box - always shows emojis, never blanks */}
                 <div style={{
                   width: '50px',
                   height: '50px',
@@ -243,10 +237,10 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.5rem',
+                  fontSize: '1.8rem',
                   flexShrink: 0
                 }}>
-                  <i className={`fa-solid ${goalIcon}`}></i>
+                  {goalEmoji}
                 </div>
 
                 {/* Details */}
@@ -286,7 +280,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     border: 'none',
                     color: '#9CA3AF',
                     cursor: 'pointer',
-                    fontSize: '1rem',
+                    fontSize: '1.2rem',
                     padding: '8px',
                     borderRadius: '50%',
                     transition: 'all 0.2s',
@@ -306,7 +300,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     e.currentTarget.style.color = '#9CA3AF';
                   }}
                 >
-                  <i className="fa-solid fa-trash"></i>
+                  🗑️
                 </button>
               </div>
 
@@ -360,11 +354,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
             borderRadius: '16px',
             border: '2px dashed #E5E7EB'
           }}>
-            <i className="fa-solid fa-bullseye" style={{ 
-              fontSize: '3rem', 
-              color: '#D1D5DB',
-              marginBottom: '15px'
-            }}></i>
+            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '15px' }}>🎯</span>
             <h3 style={{ color: '#4B5563', marginBottom: '8px' }}>No Goals Yet</h3>
             <p style={{ color: '#9CA3AF', marginBottom: '20px' }}>
               Start saving for something special!
@@ -377,7 +367,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 fontSize: '0.95rem'
               }}
             >
-              <i className="fa-solid fa-plus" style={{ marginRight: '8px' }}></i>
+              <span style={{ marginRight: '8px' }}>➕</span>
               Create Your First Goal
             </button>
           </div>
@@ -449,7 +439,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 />
               </div>
 
-              {/* Icon Selection */}
+              {/* Emoji Selection - using emojis instead of Font Awesome */}
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ 
                   display: 'block', 
@@ -462,27 +452,26 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </label>
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(45px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(50px, 1fr))',
                   gap: '8px'
                 }}>
                   {iconOptions.map((icon) => (
                     <button
-                      key={icon.icon}
+                      key={icon.emoji}
                       type="button"
-                      onClick={() => setSelectedIcon(icon.icon)}
+                      onClick={() => setSelectedIcon(icon.emoji)}
                       style={{
                         padding: '10px 0',
-                        border: selectedIcon === icon.icon ? '2px solid #10B981' : '1px solid #E5E7EB',
+                        border: selectedIcon === icon.emoji ? '3px solid #10B981' : '1px solid #E5E7EB',
                         borderRadius: '8px',
-                        background: selectedIcon === icon.icon ? '#ECFDF5' : 'white',
+                        background: selectedIcon === icon.emoji ? '#ECFDF5' : 'white',
                         cursor: 'pointer',
-                        fontSize: '1.2rem',
-                        color: selectedIcon === icon.icon ? '#10B981' : '#6B7280',
+                        fontSize: '1.5rem',
                         transition: 'all 0.2s'
                       }}
                       title={icon.name}
                     >
-                      <i className={`fa-solid ${icon.icon}`}></i>
+                      {icon.emoji}
                     </button>
                   ))}
                 </div>

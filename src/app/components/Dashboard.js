@@ -311,7 +311,6 @@ function drawTrendChart(canvasId, records, debts, goals, planner) {
   const dpr = window.devicePixelRatio || 1;
   const rect = cvs.getBoundingClientRect();
   
-  // Set canvas dimensions based on container size
   if (cvs.width !== rect.width * dpr || cvs.height !== rect.height * dpr) {
     cvs.width = rect.width * dpr;
     cvs.height = rect.height * dpr;
@@ -437,7 +436,6 @@ export default function Dashboard({
     
     if (addRecord) {
       await addRecord(newRecord);
-      // Force a re-render
       setRecords(prev => [...prev, newRecord]);
     }
     
@@ -446,7 +444,6 @@ export default function Dashboard({
     setRecNote('');
     setFabOpen(false);
     
-    // Force chart to redraw
     setTimeout(() => {
       drawTrendChart('trendCanvas', [...records, newRecord], debts, goals, planner);
     }, 100);
@@ -455,6 +452,52 @@ export default function Dashboard({
   const totalIncome = records?.filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0) || 0;
   const totalExpense = records?.filter(r => r.type === 'expense').reduce((s, r) => s + r.amount, 0) || 0;
   const balance = totalIncome - totalExpense;
+
+  // Calculate previous month's balance for percentage change
+  const getPreviousMonthBalance = () => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    let prevMonth, prevYear;
+    if (currentMonth === 0) {
+      prevMonth = 11;
+      prevYear = currentYear - 1;
+    } else {
+      prevMonth = currentMonth - 1;
+      prevYear = currentYear;
+    }
+    
+    const prevMonthRecords = records?.filter(r => {
+      const date = new Date(r.date);
+      return date.getMonth() === prevMonth && date.getFullYear() === prevYear;
+    }) || [];
+    
+    let prevBalance = 0;
+    prevMonthRecords.forEach(r => {
+      if (r.type === 'income') prevBalance += r.amount;
+      else if (r.type === 'expense') prevBalance -= r.amount;
+    });
+    
+    return prevBalance;
+  };
+
+  const previousBalance = getPreviousMonthBalance();
+  let percentChange = 0;
+  let changeText = '';
+  let changeColor = '#10B981';
+  
+  if (previousBalance > 0) {
+    percentChange = ((balance - previousBalance) / previousBalance) * 100;
+    changeText = `${percentChange > 0 ? '↑' : '↓'} ${Math.abs(percentChange).toFixed(1)}%`;
+    changeColor = percentChange >= 0 ? '#10B981' : '#ef4444';
+  } else if (balance > 0 && previousBalance === 0) {
+    changeText = '↑ New this month';
+    changeColor = '#10B981';
+  } else {
+    changeText = 'No change';
+    changeColor = '#64748b';
+  }
 
   // Draw chart when data changes or dashboard tab becomes active
   useEffect(() => {
@@ -567,7 +610,7 @@ export default function Dashboard({
                     {formatPHP(balance)}
                   </h2>
                   <p style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1.5rem' }}>
-                    <span style={{ fontWeight: 600, color: '#10B981' }}>↑ 12%</span> vs last month
+                    <span style={{ fontWeight: 600, color: changeColor }}>{changeText}</span> vs last month
                   </p>
                   <div className="chart-wrapper" style={{ height: 'clamp(250px, 40vh, 400px)', position: 'relative', width: '100%' }}>
                     <canvas id="trendCanvas" style={{ width: '100%', height: '100%' }}></canvas>
@@ -621,7 +664,7 @@ export default function Dashboard({
         </main>
       </div>
 
-      {/* FAB Button - No emojis */}
+      {/* FAB Button */}
       <div style={{
         position: 'fixed',
         bottom: '30px',
@@ -669,7 +712,6 @@ export default function Dashboard({
             gap: '10px',
             animation: 'slideIn 0.3s ease'
           }}>
-            {/* Income Button */}
             <button 
               onClick={() => { 
                 setRecType('income');
@@ -703,11 +745,10 @@ export default function Dashboard({
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.15)';
               }}
             >
-              <i className="fa-solid fa-arrow-down" style={{ color: '#10B981', width: '20px' }}></i>
+              <span style={{ fontSize: '20px' }}>💰</span>
               <span>Add Income</span>
             </button>
 
-            {/* Expense Button */}
             <button 
               onClick={() => { 
                 setRecType('expense');
@@ -741,7 +782,7 @@ export default function Dashboard({
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.15)';
               }}
             >
-              <i className="fa-solid fa-arrow-up" style={{ color: '#ef4444', width: '20px' }}></i>
+              <span style={{ fontSize: '20px' }}>💸</span>
               <span>Add Expense</span>
             </button>
           </div>
