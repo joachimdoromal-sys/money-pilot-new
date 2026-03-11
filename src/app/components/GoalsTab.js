@@ -237,7 +237,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
 
   return (
     <section id="view-goals" className="view-section">
-      {/* Header */}
+      {/* Header with Beautiful New Goal Button */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -246,29 +246,52 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
         flexWrap: 'wrap',
         gap: '15px'
       }}>
-        <h3 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', margin: 0 }}>Savings Goals</h3>
+        <h3 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', margin: 0, color: '#1F2937' }}>Savings Goals</h3>
+        
+        {/* Beautiful New Goal Button */}
         <button 
-          className="btn btn-primary" 
           onClick={() => setShowModal(true)}
           style={{
-            padding: '12px 24px',
+            padding: '12px 28px',
             fontSize: '1rem',
-            borderRadius: '12px',
-            whiteSpace: 'nowrap',
+            fontWeight: '600',
+            borderRadius: '50px',
+            border: 'none',
+            background: 'linear-gradient(135deg, #10B981, #059669)',
+            color: 'white',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            background: '#10B981',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
+            gap: '10px',
+            boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)',
+            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            whiteSpace: 'nowrap',
+            letterSpacing: '0.3px',
+            outline: 'none'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
-          onMouseLeave={(e) => e.currentTarget.style.background = '#10B981'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 12px 25px rgba(16, 185, 129, 0.4)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, #059669, #047857)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+          }}
         >
-          <span style={{ fontSize: '1.2rem' }}>➕</span>
-          New Goal
+          <span style={{ 
+            fontSize: '1.3rem', 
+            fontWeight: '400',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(255,255,255,0.2)',
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%'
+          }}>+</span>
+          <span>New Goal</span>
         </button>
       </div>
 
@@ -449,17 +472,45 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
               Start saving for something special!
             </p>
             <button 
-              className="btn btn-primary"
               onClick={() => setShowModal(true)}
               style={{
-                padding: '10px 24px',
-                fontSize: '0.95rem',
+                padding: '12px 28px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                borderRadius: '50px',
+                border: 'none',
+                background: 'linear-gradient(135deg, #10B981, #059669)',
+                color: 'white',
+                cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '10px',
+                boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)',
+                transition: 'all 0.3s ease',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 25px rgba(16, 185, 129, 0.4)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #059669, #047857)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #10B981, #059669)';
               }}
             >
-              <span style={{ fontSize: '1.1rem' }}>➕</span>
+              <span style={{ 
+                fontSize: '1.3rem', 
+                fontWeight: '400',
+                background: 'rgba(255,255,255,0.2)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>+</span>
               Create Your First Goal
             </button>
           </div>
@@ -635,7 +686,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </div>
               </div>
 
-              {/* Buttons */}
+              {/* Buttons - No emoji on Create Goal */}
               <div style={{ 
                 display: 'flex', 
                 gap: '10px', 
@@ -653,16 +704,11 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     fontSize: '0.95rem',
                     fontWeight: '600',
                     cursor: 'pointer',
-                    transition: 'background 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px'
+                    transition: 'background 0.2s'
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#10B981'}
                 >
-                  <span>✨</span>
                   Create Goal
                 </button>
                 <button
