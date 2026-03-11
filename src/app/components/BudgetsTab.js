@@ -4,6 +4,9 @@ import { useState } from "react";
 
 export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudget, addBudget }) {
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState(null);
+  const [addAmount, setAddAmount] = useState('');
   const [budgetName, setBudgetName] = useState('');
   const [budgetLimit, setBudgetLimit] = useState('');
   const [budgetCategory, setBudgetCategory] = useState('Food');
@@ -11,12 +14,7 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
 
   // Safe calculation of spent amount
   const calculateSpent = (budget) => {
-    // If spent is already a number and valid, use it
-    if (budget.spent && !isNaN(budget.spent) && budget.spent > 0) {
-      return budget.spent;
-    }
-    // Otherwise return 0
-    return 0;
+    return (budget.spent && !isNaN(budget.spent)) ? budget.spent : 0;
   };
 
   const addBudgetHandler = (e) => {
@@ -42,6 +40,26 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
     setShowModal(false);
     setBudgetName('');
     setBudgetLimit('');
+  };
+
+  const handleAddExpense = () => {
+    if (!selectedBudget || !addAmount) return;
+    
+    const amount = parseFloat(addAmount) || 0;
+    if (amount <= 0) return;
+    
+    const updatedBudget = {
+      ...selectedBudget,
+      spent: (selectedBudget.spent || 0) + amount
+    };
+    
+    setBudgets(budgets.map(b => 
+      b.id === selectedBudget.id ? updatedBudget : b
+    ));
+    
+    setShowAddModal(false);
+    setSelectedBudget(null);
+    setAddAmount('');
   };
 
   return (
@@ -84,7 +102,7 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
       {/* Budgets Grid */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '20px'
       }}>
         {budgets && budgets.length > 0 ? budgets.map(b => {
@@ -132,7 +150,7 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
               </div>
 
               {/* Progress Bar */}
-              <div style={{ marginBottom: '10px' }}>
+              <div style={{ marginBottom: '15px' }}>
                 <div style={{ 
                   display: 'flex', 
                   justifyContent: 'space-between',
@@ -170,6 +188,40 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
                   </span>
                 </div>
               </div>
+
+              {/* Add Expense Button */}
+              <button
+                onClick={() => {
+                  setSelectedBudget(b);
+                  setShowAddModal(true);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  background: '#F3F4F6',
+                  color: '#1F2937',
+                  border: '1px dashed #9CA3AF',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#E5E7EB';
+                  e.currentTarget.style.borderColor = '#10B981';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#F3F4F6';
+                  e.currentTarget.style.borderColor = '#9CA3AF';
+                }}
+              >
+                <span>+</span>
+                Add Expense
+              </button>
             </div>
           );
         }) : (
@@ -369,6 +421,97 @@ export default function BudgetsTab({ budgets, setBudgets, formatPHP, deleteBudge
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Expense Modal */}
+      {showAddModal && selectedBudget && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '15px',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '20px',
+            width: '100%',
+            maxWidth: '400px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+          }}>
+            <h3 style={{ marginBottom: '15px', fontSize: '1.3rem' }}>
+              Add Expense to "{selectedBudget.name}"
+            </h3>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
+                Amount (₱)
+              </label>
+              <input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                placeholder="Enter amount"
+                min="0"
+                step="0.01"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+                autoFocus
+              />
+            </div>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleAddExpense}
+                style={{
+                  flex: 2,
+                  padding: '12px',
+                  background: '#10B981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Add Expense
+              </button>
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setSelectedBudget(null);
+                  setAddAmount('');
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: 'white',
+                  color: '#6B7280',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

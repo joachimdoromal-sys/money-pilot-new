@@ -4,6 +4,9 @@ import { useState } from "react";
 
 export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, deleteGoal, addGoal }) {
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [addAmount, setAddAmount] = useState('');
   const [goalName, setGoalName] = useState('');
   const [goalTarget, setGoalTarget] = useState('');
   const [goalDate, setGoalDate] = useState('');
@@ -60,7 +63,6 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
   const getEmojiForGoal = (goalName) => {
     const name = goalName.toLowerCase();
     
-    // Technology & Electronics
     if (name.includes('monitor') || name.includes('laptop') || name.includes('computer') || name.includes('pc') || name.includes('macbook')) 
       return '💻';
     if (name.includes('phone') || name.includes('iphone') || name.includes('samsung') || name.includes('tablet')) 
@@ -71,24 +73,18 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       return '🎧';
     if (name.includes('tv') || name.includes('television') || name.includes('smart tv')) 
       return '📺';
-    
-    // Transportation
     if (name.includes('car') || name.includes('vehicle') || name.includes('toyota') || name.includes('honda')) 
       return '🚗';
     if (name.includes('motor') || name.includes('bike') || name.includes('motorcycle')) 
       return '🏍️';
     if (name.includes('bicycle') || name.includes('ebike')) 
       return '🚲';
-    
-    // Home & Living
     if (name.includes('house') || name.includes('home') || name.includes('apartment') || name.includes('condo')) 
       return '🏠';
     if (name.includes('furniture') || name.includes('sofa') || name.includes('table') || name.includes('chair')) 
       return '🛋️';
     if (name.includes('bed') || name.includes('mattress')) 
       return '🛏️';
-    
-    // Food & Dining
     if (name.includes('dinner') || name.includes('food') || name.includes('restaurant') || name.includes('groceries')) 
       return '🍽️';
     if (name.includes('coffee') || name.includes('starbucks')) 
@@ -97,60 +93,44 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       return '🍕';
     if (name.includes('burger')) 
       return '🍔';
-    
-    // Travel & Vacation
     if (name.includes('plane') || name.includes('flight') || name.includes('vacation') || name.includes('trip') || name.includes('travel')) 
       return '✈️';
     if (name.includes('hotel') || name.includes('resort') || name.includes('beach')) 
       return '🏖️';
     if (name.includes('camping') || name.includes('tent')) 
       return '⛺';
-    
-    // Finance & Savings
     if (name.includes('piggy') || name.includes('save') || name.includes('bank') || name.includes('emergency fund')) 
       return '🐷';
     if (name.includes('coin') || name.includes('money') || name.includes('cash')) 
       return '💰';
     if (name.includes('investment') || name.includes('stock') || name.includes('crypto')) 
       return '📈';
-    
-    // Education
     if (name.includes('grad') || name.includes('school') || name.includes('education') || name.includes('college') || name.includes('university')) 
       return '🎓';
     if (name.includes('book') || name.includes('library') || name.includes('study')) 
       return '📚';
-    
-    // Gifts & Celebrations
     if (name.includes('gift') || name.includes('present') || name.includes('christmas') || name.includes('birthday')) 
       return '🎁';
     if (name.includes('wedding') || name.includes('anniversary')) 
       return '💍';
-    
-    // Health & Fitness
     if (name.includes('gym') || name.includes('fitness') || name.includes('workout') || name.includes('exercise')) 
       return '💪';
     if (name.includes('health') || name.includes('medical') || name.includes('doctor') || name.includes('hospital')) 
       return '🏥';
     if (name.includes('yoga') || name.includes('meditation')) 
       return '🧘';
-    
-    // Entertainment
     if (name.includes('game') || name.includes('playstation') || name.includes('xbox') || name.includes('nintendo')) 
       return '🎮';
     if (name.includes('movie') || name.includes('film') || name.includes('cinema') || name.includes('netflix')) 
       return '🎬';
     if (name.includes('music') || name.includes('concert') || name.includes('festival')) 
       return '🎵';
-    
-    // Personal & Lifestyle
     if (name.includes('watch') || name.includes('rolex') || name.includes('apple watch')) 
       return '⌚';
     if (name.includes('jewelry') || name.includes('necklace') || name.includes('ring')) 
       return '💎';
     if (name.includes('clothes') || name.includes('shirt') || name.includes('dress') || name.includes('shoes')) 
       return '👕';
-    
-    // Default
     if (name.includes('test') || name.includes('trial')) 
       return '⚗️';
     if (name.includes('new')) 
@@ -161,7 +141,6 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     return '⭐';
   };
 
-  // Icon options for modal selection - with emojis
   const iconOptions = [
     { name: 'Star', emoji: '⭐' },
     { name: 'Heart', emoji: '❤️' },
@@ -199,7 +178,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     { name: 'Shirt', emoji: '👕' }
   ];
 
-  // Safe percentage calculation - FIXES NaN%
+  // Safe percentage calculation
   const calculatePercentage = (saved, target) => {
     const savedNum = Number(saved) || 0;
     const targetNum = Number(target) || 0;
@@ -219,7 +198,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       target: targetValue,
       date: goalDate,
       saved: 0,
-      icon: selectedIcon // Store as emoji, not Font Awesome class
+      icon: selectedIcon
     };
     
     if (addGoal) {
@@ -235,9 +214,38 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     setSelectedIcon('⭐');
   };
 
+  const handleAddProgress = () => {
+    if (!selectedGoal || !addAmount) return;
+    
+    const amount = parseFloat(addAmount) || 0;
+    if (amount <= 0) return;
+    
+    const updatedGoal = {
+      ...selectedGoal,
+      saved: (selectedGoal.saved || 0) + amount
+    };
+    
+    // Update in Supabase or local state
+    if (addGoal) {
+      // You'll need an update function in page.js
+      // For now, update locally
+      setGoals(goals.map(g => 
+        g.id === selectedGoal.id ? updatedGoal : g
+      ));
+    } else {
+      setGoals(goals.map(g => 
+        g.id === selectedGoal.id ? updatedGoal : g
+      ));
+    }
+    
+    setShowAddModal(false);
+    setSelectedGoal(null);
+    setAddAmount('');
+  };
+
   return (
     <section id="view-goals" className="view-section">
-      {/* Header with Beautiful New Goal Button */}
+      {/* Header */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -298,22 +306,17 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       {/* Goals Grid */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '20px',
         padding: '5px'
       }}>
         {goals && goals.length > 0 ? goals.map(g => {
-          // Determine which emoji to show:
-          // 1. If it's already an emoji (starts with non-letter), use it
-          // 2. If it's a Font Awesome class (starts with 'fa-'), convert it
-          // 3. Otherwise, generate based on name
           let displayEmoji = '⭐';
           
           if (g.icon) {
             if (g.icon.startsWith('fa-')) {
               displayEmoji = faToEmoji(g.icon);
             } else if (g.icon.length <= 2) {
-              // Likely already an emoji
               displayEmoji = g.icon;
             } else {
               displayEmoji = getEmojiForGoal(g.name);
@@ -339,7 +342,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 gap: '15px',
                 marginBottom: '15px'
               }}>
-                {/* Emoji Box - now shows proper emojis */}
+                {/* Emoji Box */}
                 <div style={{
                   width: '50px',
                   height: '50px',
@@ -444,15 +447,43 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     transition: 'width 0.3s ease'
                   }}></div>
                 </div>
+                
+                {/* Add Progress Section */}
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  marginTop: '8px',
-                  fontSize: '0.85rem',
-                  color: '#64748b'
+                  alignItems: 'center',
+                  marginTop: '12px',
+                  gap: '10px'
                 }}>
-                  <span>Saved: {formatPHP(g.saved || 0)}</span>
-                  <span>Remaining: {formatPHP((g.target || 0) - (g.saved || 0))}</span>
+                  <span style={{ fontSize: '0.9rem', color: '#4B5563' }}>
+                    Saved: <strong>{formatPHP(g.saved || 0)}</strong>
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedGoal(g);
+                      setShowAddModal(true);
+                    }}
+                    style={{
+                      padding: '6px 16px',
+                      background: '#10B981',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '20px',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      transition: 'background 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#10B981'}
+                  >
+                    <span>+</span>
+                    Add Savings
+                  </button>
                 </div>
               </div>
             </div>
@@ -686,7 +717,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </div>
               </div>
 
-              {/* Buttons - No emoji on Create Goal */}
+              {/* Buttons */}
               <div style={{ 
                 display: 'flex', 
                 gap: '10px', 
@@ -732,6 +763,97 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Progress Modal */}
+      {showAddModal && selectedGoal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '15px',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '20px',
+            width: '100%',
+            maxWidth: '400px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+          }}>
+            <h3 style={{ marginBottom: '15px', fontSize: '1.3rem' }}>
+              Add Savings to "{selectedGoal.name}"
+            </h3>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
+                Amount (₱)
+              </label>
+              <input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                placeholder="Enter amount"
+                min="0"
+                step="0.01"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+                autoFocus
+              />
+            </div>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleAddProgress}
+                style={{
+                  flex: 2,
+                  padding: '12px',
+                  background: '#10B981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Add Savings
+              </button>
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setSelectedGoal(null);
+                  setAddAmount('');
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: 'white',
+                  color: '#6B7280',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
