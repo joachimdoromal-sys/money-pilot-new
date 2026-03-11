@@ -1,0 +1,120 @@
+/* Better mobile spacing */
+@media screen and (max-width: 768px) {
+  .main__content {
+    padding: 10px !important;
+  }
+  
+  .card {
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .chart-wrapper {
+    height: 250px !important;
+    margin: 10px 0 !important;
+  }
+  
+  /* Fix graph labels */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Better FAB positioning */
+  .fab-container, div[style*="position: fixed"][style*="bottom: 30px"] {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+  
+  .fab-main, button[style*="width: 60px"][style*="height: 60px"] {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 24px !important;
+  }
+  
+  /* FAB menu better positioned */
+  div[style*="position: absolute"][style*="bottom: 70px"] {
+    bottom: 60px !important;
+    right: 0 !important;
+    min-width: 160px !important;
+  }
+  
+  /* Better touch targets */
+  button, .nav__item, .btn {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Improve readability */
+  h2 {
+    font-size: 1.8rem !important;
+  }
+  
+  h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  p {
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Better grid spacing */
+  .grid-2, .grid-3 {
+    gap: 12px !important;
+  }
+  
+  /* Improve modal on mobile */
+  .modal-content, div[style*="max-width: 500px"] {
+    width: 95% !important;
+    padding: 20px !important;
+    margin: 10px !important;
+  }
+  
+  /* Better form inputs */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 12px !important;
+  }
+}
+
+/* Small phones */
+@media screen and (max-width: 480px) {
+  .main__content {
+    padding: 8px !important;
+  }
+  
+  .card {
+    padding: 12px !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.2rem !important;
+  }
+  
+  .chart-wrapper {
+    height: 200px !important;
+  }
+  
+  /* Stack buttons on mobile */
+  div[style*="display: flex"][style*="justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  button {
+    width: 100% !important;
+    margin: 5px 0 !important;
+  }
+  
+  /* FAB button adjustments */
+  .fab-main, button[style*="width: 60px"][style*="height: 60px"] {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 22px !important;
+  }
+}
