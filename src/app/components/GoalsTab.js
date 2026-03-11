@@ -9,7 +9,115 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
   const [goalDate, setGoalDate] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('fa-star');
 
-  // Icon options for goals - matching feature card style
+  // Function to get appropriate icon based on goal name
+  const getIconForGoal = (goalName) => {
+    const name = goalName.toLowerCase();
+    
+    // Technology & Electronics
+    if (name.includes('monitor') || name.includes('laptop') || name.includes('computer') || name.includes('pc') || name.includes('macbook')) 
+      return 'fa-laptop';
+    if (name.includes('phone') || name.includes('iphone') || name.includes('samsung') || name.includes('tablet')) 
+      return 'fa-mobile-alt';
+    if (name.includes('camera') || name.includes('gopro')) 
+      return 'fa-camera';
+    if (name.includes('headphone') || name.includes('earbuds') || name.includes('airpods')) 
+      return 'fa-headphones';
+    if (name.includes('tv') || name.includes('television') || name.includes('smart tv')) 
+      return 'fa-tv';
+    
+    // Transportation
+    if (name.includes('car') || name.includes('vehicle') || name.includes('toyota') || name.includes('honda')) 
+      return 'fa-car';
+    if (name.includes('motor') || name.includes('bike') || name.includes('motorcycle')) 
+      return 'fa-motorcycle';
+    if (name.includes('bicycle') || name.includes('ebike')) 
+      return 'fa-bicycle';
+    
+    // Home & Living
+    if (name.includes('house') || name.includes('home') || name.includes('apartment') || name.includes('condo')) 
+      return 'fa-house';
+    if (name.includes('furniture') || name.includes('sofa') || name.includes('table') || name.includes('chair')) 
+      return 'fa-couch';
+    if (name.includes('bed') || name.includes('mattress')) 
+      return 'fa-bed';
+    
+    // Food & Dining
+    if (name.includes('dinner') || name.includes('food') || name.includes('restaurant') || name.includes('groceries')) 
+      return 'fa-utensils';
+    if (name.includes('coffee') || name.includes('starbucks')) 
+      return 'fa-mug-hot';
+    if (name.includes('pizza')) 
+      return 'fa-pizza-slice';
+    if (name.includes('burger')) 
+      return 'fa-burger';
+    
+    // Travel & Vacation
+    if (name.includes('plane') || name.includes('flight') || name.includes('vacation') || name.includes('trip') || name.includes('travel')) 
+      return 'fa-plane';
+    if (name.includes('hotel') || name.includes('resort') || name.includes('beach')) 
+      return 'fa-umbrella-beach';
+    if (name.includes('camping') || name.includes('tent')) 
+      return 'fa-campground';
+    
+    // Finance & Savings
+    if (name.includes('piggy') || name.includes('save') || name.includes('bank') || name.includes('emergency fund')) 
+      return 'fa-piggy-bank';
+    if (name.includes('coin') || name.includes('money') || name.includes('cash')) 
+      return 'fa-coins';
+    if (name.includes('investment') || name.includes('stock') || name.includes('crypto')) 
+      return 'fa-chart-line';
+    
+    // Education
+    if (name.includes('grad') || name.includes('school') || name.includes('education') || name.includes('college') || name.includes('university')) 
+      return 'fa-graduation-cap';
+    if (name.includes('book') || name.includes('library') || name.includes('study')) 
+      return 'fa-book';
+    if (name.includes('course') || name.includes('class') || name.includes('training')) 
+      return 'fa-video';
+    
+    // Gifts & Celebrations
+    if (name.includes('gift') || name.includes('present') || name.includes('christmas') || name.includes('birthday')) 
+      return 'fa-gift';
+    if (name.includes('wedding') || name.includes('anniversary')) 
+      return 'fa-ring';
+    
+    // Health & Fitness
+    if (name.includes('gym') || name.includes('fitness') || name.includes('workout') || name.includes('exercise')) 
+      return 'fa-dumbbell';
+    if (name.includes('health') || name.includes('medical') || name.includes('doctor') || name.includes('hospital')) 
+      return 'fa-heart-pulse';
+    if (name.includes('yoga') || name.includes('meditation')) 
+      return 'fa-spa';
+    
+    // Entertainment
+    if (name.includes('game') || name.includes('playstation') || name.includes('xbox') || name.includes('nintendo')) 
+      return 'fa-gamepad';
+    if (name.includes('movie') || name.includes('film') || name.includes('cinema') || name.includes('netflix')) 
+      return 'fa-film';
+    if (name.includes('music') || name.includes('concert') || name.includes('festival')) 
+      return 'fa-music';
+    
+    // Personal & Lifestyle
+    if (name.includes('watch') || name.includes('rolex') || name.includes('apple watch')) 
+      return 'fa-clock';
+    if (name.includes('jewelry') || name.includes('necklace') || name.includes('ring')) 
+      return 'fa-gem';
+    if (name.includes('clothes') || name.includes('shirt') || name.includes('dress') || name.includes('shoes')) 
+      return 'fa-shirt';
+    
+    // Default icons based on common words
+    if (name.includes('test') || name.includes('trial')) 
+      return 'fa-flask';
+    if (name.includes('new')) 
+      return 'fa-star';
+    if (name.includes('big') || name.includes('large')) 
+      return 'fa-crown';
+    
+    // Default fallback
+    return 'fa-star';
+  };
+
+  // Icon options for modal selection
   const iconOptions = [
     { name: 'Star', icon: 'fa-star' },
     { name: 'Heart', icon: 'fa-heart' },
@@ -22,16 +130,37 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
     { name: 'Graduation', icon: 'fa-graduation-cap' },
     { name: 'Utensils', icon: 'fa-utensils' },
     { name: 'Pen', icon: 'fa-pen' },
-    { name: 'Computer', icon: 'fa-computer' }
+    { name: 'Computer', icon: 'fa-computer' },
+    { name: 'Game', icon: 'fa-gamepad' },
+    { name: 'Gym', icon: 'fa-dumbbell' },
+    { name: 'Camera', icon: 'fa-camera' },
+    { name: 'Headphones', icon: 'fa-headphones' }
   ];
+
+  // Safe percentage calculation - FIXES NaN%
+  const calculatePercentage = (saved, target) => {
+    // Convert to numbers and handle invalid cases
+    const savedNum = Number(saved) || 0;
+    const targetNum = Number(target) || 0;
+    
+    // Avoid division by zero
+    if (targetNum <= 0) return 0;
+    
+    // Calculate percentage and cap at 100%
+    const percentage = (savedNum / targetNum) * 100;
+    return Math.min(percentage, 100);
+  };
 
   const addGoalHandler = (e) => {
     e.preventDefault();
     
+    // Ensure target is a valid number
+    const targetValue = parseFloat(goalTarget) || 0;
+    
     const newGoal = {
       id: Date.now(),
       name: goalName,
-      target: parseFloat(goalTarget),
+      target: targetValue,
       date: goalDate,
       saved: 0,
       icon: selectedIcon
@@ -80,12 +209,15 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
       {/* Goals Grid */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '20px',
         padding: '5px'
       }}>
         {goals && goals.length > 0 ? goals.map(g => {
-          const pct = (g.saved / g.target) * 100;
+          // Get appropriate icon based on goal name, fallback to saved icon or star
+          const goalIcon = g.icon || getIconForGoal(g.name);
+          const percentage = calculatePercentage(g.saved, g.target);
+          
           return (
             <div key={g.id} style={{
               background: 'white',
@@ -101,7 +233,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 gap: '15px',
                 marginBottom: '15px'
               }}>
-                {/* Icon Box - matching feature card style */}
+                {/* Icon Box - now shows proper icons */}
                 <div style={{
                   width: '50px',
                   height: '50px',
@@ -114,7 +246,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   fontSize: '1.5rem',
                   flexShrink: 0
                 }}>
-                  <i className={`fa-solid ${g.icon || 'fa-star'}`}></i>
+                  <i className={`fa-solid ${goalIcon}`}></i>
                 </div>
 
                 {/* Details */}
@@ -134,7 +266,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                     fontSize: '0.9rem', 
                     color: '#6B7280'
                   }}>
-                    ₱{g.target.toLocaleString()}
+                    Target: {formatPHP(g.target)}
                   </div>
                   {g.date && (
                     <div style={{ 
@@ -178,7 +310,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 </button>
               </div>
 
-              {/* Progress Bar */}
+              {/* Progress Bar - Now safe from NaN */}
               <div>
                 <div style={{ 
                   display: 'flex', 
@@ -190,7 +322,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   <span style={{ 
                     fontWeight: '600',
                     color: '#10B981'
-                  }}>{Math.round(pct)}%</span>
+                  }}>{Math.round(percentage)}%</span>
                 </div>
                 <div style={{
                   height: '8px',
@@ -199,12 +331,22 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                   overflow: 'hidden'
                 }}>
                   <div style={{
-                    width: `${pct}%`,
+                    width: `${percentage}%`,
                     height: '100%',
                     background: '#10B981',
                     borderRadius: '10px',
                     transition: 'width 0.3s ease'
                   }}></div>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: '8px',
+                  fontSize: '0.85rem',
+                  color: '#64748b'
+                }}>
+                  <span>Saved: {formatPHP(g.saved || 0)}</span>
+                  <span>Remaining: {formatPHP((g.target || 0) - (g.saved || 0))}</span>
                 </div>
               </div>
             </div>
@@ -307,7 +449,7 @@ export default function GoalsTab({ goals, setGoals, formatPHP, formatDate, delet
                 />
               </div>
 
-              {/* Icon Selection - matching feature card style */}
+              {/* Icon Selection */}
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ 
                   display: 'block', 
